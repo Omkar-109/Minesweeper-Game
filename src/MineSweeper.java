@@ -1,7 +1,11 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class MineSweeper implements MineFunctions {
@@ -33,11 +37,30 @@ public class MineSweeper implements MineFunctions {
     Random random = new Random();
     int tilesClicked = 0;
 
+    // Load and scale images
+    ImageIcon bombIcon;
+    ImageIcon flagIcon;
+
     MineSweeper() {
+        loadImages();
         initializeFrame();
         initializeBoard();
         setMines();
         frame.setVisible(true);
+    }
+//for images
+    private void loadImages() {
+        try {
+            // Load images
+            BufferedImage bombImage = ImageIO.read(getClass().getResource("/images/bombimg.png"));
+            BufferedImage flagImage = ImageIO.read(getClass().getResource("/images/flagimg.png"));
+
+            // Scale images to fit the button size
+            bombIcon = new ImageIcon(bombImage.getScaledInstance(titleSize-10, titleSize-10, Image.SCALE_SMOOTH));
+            flagIcon = new ImageIcon(flagImage.getScaledInstance(titleSize-10, titleSize-10, Image.SCALE_SMOOTH));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initializeFrame() {
@@ -55,7 +78,6 @@ public class MineSweeper implements MineFunctions {
         textPanel.add(textLabel);
         textPanel.add(levelSelector);
         textPanel.add(resetButton);
-
 
         frame.add(textPanel, BorderLayout.NORTH);
 
@@ -87,9 +109,9 @@ public class MineSweeper implements MineFunctions {
 
                         MineTile tile = (MineSweeper.MineTile) e.getSource();
 
-                       
                         if (e.getButton() == MouseEvent.BUTTON1) {
-                            if (tile.getText().isEmpty()) {
+                        	//if (tile.getText().isEmpty()) {
+                            if (tile.getIcon() == null) {
                                 if (mineList.contains(tile)) {
                                     revealMines();
                                 } else {
@@ -97,10 +119,17 @@ public class MineSweeper implements MineFunctions {
                                 }
                             }
                         } else if (e.getButton() == MouseEvent.BUTTON3) {
-                            if (tile.getText().isEmpty() && tile.isEnabled()) {
-                                tile.setText("🚩F");
-                            } else if (tile.getText().equals("🚩F")) {
-                                tile.setText("");
+                            
+                        	//emoji
+//                        	if (tile.getText().isEmpty() && tile.isEnabled()) {
+//                                tile.setText("🚩");
+//                            } else if (tile.getText().equals("🚩")) {
+//                                tile.setText("");
+                        	
+                        	if (tile.getIcon() == null && tile.isEnabled()) {
+                                tile.setIcon(flagIcon);
+                            } else if (tile.getIcon() == flagIcon) {
+                                tile.setIcon(null);
                             }
                         }
                     }
@@ -130,7 +159,8 @@ public class MineSweeper implements MineFunctions {
 
     public void revealMines() {
         for (MineTile tile : mineList) {
-            tile.setText("💣M");
+        	//tile.setText("💣");
+            tile.setIcon(bombIcon);
         }
 
         gameOver = true;
@@ -152,7 +182,7 @@ public class MineSweeper implements MineFunctions {
 
         int minesFound = 0;
 
-        //Check surrounding tiles for mines
+        // Check surrounding tiles for mines
         minesFound += countMine(r - 1, c - 1); // Top left
         minesFound += countMine(r - 1, c);     // Top
         minesFound += countMine(r - 1, c + 1); // Top right
@@ -221,6 +251,4 @@ public class MineSweeper implements MineFunctions {
         frame.setSize(numCols * titleSize, numRows * titleSize + 100);
         resetGame();
     }
-
-    
 }
