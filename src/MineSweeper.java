@@ -31,7 +31,7 @@ public class MineSweeper implements MineFunctions {
     MineTile[][] board;
     ArrayList<MineTile> mineList;
     Random random = new Random();
-    int tilesClicked = 0; // Goal is to click all tiles except the ones containing mines
+    int tilesClicked = 0;
 
     MineSweeper() {
         initializeFrame();
@@ -87,7 +87,7 @@ public class MineSweeper implements MineFunctions {
 
                         MineTile tile = (MineSweeper.MineTile) e.getSource();
 
-                        // Left click
+                       
                         if (e.getButton() == MouseEvent.BUTTON1) {
                             if (tile.getText().isEmpty()) {
                                 if (mineList.contains(tile)) {
@@ -98,8 +98,8 @@ public class MineSweeper implements MineFunctions {
                             }
                         } else if (e.getButton() == MouseEvent.BUTTON3) {
                             if (tile.getText().isEmpty() && tile.isEnabled()) {
-                                tile.setText("🚩");
-                            } else if (tile.getText().equals("🚩")) {
+                                tile.setText("🚩F");
+                            } else if (tile.getText().equals("🚩F")) {
                                 tile.setText("");
                             }
                         }
@@ -130,7 +130,7 @@ public class MineSweeper implements MineFunctions {
 
     public void revealMines() {
         for (MineTile tile : mineList) {
-            tile.setText("💣");
+            tile.setText("💣M");
         }
 
         gameOver = true;
@@ -152,7 +152,7 @@ public class MineSweeper implements MineFunctions {
 
         int minesFound = 0;
 
-        // Check surrounding tiles for mines
+        //Check surrounding tiles for mines
         minesFound += countMine(r - 1, c - 1); // Top left
         minesFound += countMine(r - 1, c);     // Top
         minesFound += countMine(r - 1, c + 1); // Top right
@@ -222,7 +222,5 @@ public class MineSweeper implements MineFunctions {
         resetGame();
     }
 
-    public static void main(String[] args) {
-        new MineSweeper();
-    }
+    
 }
