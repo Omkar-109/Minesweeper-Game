@@ -8,6 +8,11 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+/*Minesweeper game in java using swing
+ * 
+ * @author Omkar Mhamal
+ * 
+ */
 public class MineSweeper implements MineFunctions {
 
     private class MineTile extends JButton {
@@ -16,6 +21,10 @@ public class MineSweeper implements MineFunctions {
         public MineTile(int r, int c) {
             this.r = r;
             this.c = c;
+            
+            
+            setBorder(BorderFactory.createLineBorder(Color.BLUE));
+            
         }
     }
 
@@ -55,7 +64,6 @@ public class MineSweeper implements MineFunctions {
             BufferedImage bombImage = ImageIO.read(getClass().getResource("/images/bombimg.png"));
             BufferedImage flagImage = ImageIO.read(getClass().getResource("/images/flagimg.png"));
 
-            // Scale images to fit the button size
             bombIcon = new ImageIcon(bombImage.getScaledInstance(titleSize-10, titleSize-10, Image.SCALE_SMOOTH));
             flagIcon = new ImageIcon(flagImage.getScaledInstance(titleSize-10, titleSize-10, Image.SCALE_SMOOTH));
         } catch (IOException e) {
@@ -69,7 +77,7 @@ public class MineSweeper implements MineFunctions {
         frame.setResizable(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-
+        
         textLabel.setFont(new Font("Arial", Font.BOLD, 16));
         textLabel.setHorizontalAlignment(JLabel.CENTER);
         textLabel.setText("Minesweeper: " + mineCount);
@@ -164,7 +172,10 @@ public class MineSweeper implements MineFunctions {
         }
 
         gameOver = true;
+        textLabel.setForeground(Color.RED);
         textLabel.setText("Game Over!");
+        
+        
     }
 
     public void checkMine(int r, int c) {
@@ -210,6 +221,7 @@ public class MineSweeper implements MineFunctions {
 
         if (tilesClicked == numRows * numCols - mineList.size()) {
             gameOver = true;
+            textLabel.setForeground(Color.GREEN);
             textLabel.setText("Mines Cleared! You Won!");
         }
     }
